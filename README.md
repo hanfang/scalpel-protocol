@@ -1,4 +1,4 @@
-# scalpel-protol
+# scalpel-protocol
 This repository includes resources for indel variant analysis of whole genome and exome capture sequencing experiments.
 Currently we host a few relevant files for using scalpel (scalpel.sourceforge.net)
 
