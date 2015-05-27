@@ -18,6 +18,3 @@ Cite:
 
 - Narzisi G, O’Rawe JA, Iossifov I, Fang H, Lee Y, Wang Z, Wu Y, Lyon GJ, Wigler M, Schatz MC. "Accurate detection of de novo and transmitted INDELs within exome-capture data using micro-assembly". Nature Methods (2014) doi:10.1038/nmeth.3069. 
 
-Contact:
-
-- Han Fang: hanfang.cshl@gmail.com
