@@ -52,7 +52,7 @@ set tmargin 2
 #set key at 100, 10000
 show key
 
-set title "Homopoly VAF distribution"
+set title "Homopolyers VAF distribution"
 #set label 1 "$tool " at -80,400 center
 
 #plot infile u (bin(100*($2/($1+$2)),binwidth)):(1.0) smooth freq w boxes title ""
