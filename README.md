@@ -4,7 +4,7 @@
 ###----------------------------------------------------------
 ### version: v0.5.2
 ### Authors: Han Fang, Giuseppe Narzisi, Michael C. Schatz
-### Date: Sept 4, 2015
+### Date: Sept 18, 2015
 ###----------------------------------------------------------
 
 #### Introduction:
@@ -18,8 +18,10 @@ Currently we host a few relevant files for using scalpel (http://scalpel.sourcef
 - SeqCap_EZ_Exome_v3_primary.scalpel.bed: exonic targetted bed file derived from the bed file of SeqCap EZ Human Exome Library v3.0 (http://www.nimblegen.com/downloads/annotation/ez_exome_v3/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip)
 - clinvar_main.bed: a bed file of the variants in the ClinVar main database June 2015 
 - *gnu: several gnuplot files for plotting
-- filter_vcf.sh: a shell wrapped for basic filtering of the scalpel vcf files
-- run_protocol.sh: a shell script documenting the main step in the protocol manuscript
+- denovo-multi-filter.py: a python script for filtering Scalpel multi sample vcf
+- single-vcf-filter.py: a python script for filtering Scalpel single sample vcf
+- coding_indel_size.R: a R scipt for plotting coding indels
+- run_protocol.0.52.sh: a shell script documenting the main step in the protocol manuscript
 
 
 #### Cite:

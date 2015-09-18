@@ -3,7 +3,7 @@
 ## ----------------------
 # A python module for filtering Scalpel multisample VCF files
 ## ----------------------
-# version 0.1.0 2015-08-21
+# version 0.2.0 2015-09-18
 # Han Fang (hanfang.cshl@gmail.com)
 # Cold Spring Harbor Laboratory
 ## ----------------------
@@ -41,33 +41,37 @@ class filter_vcf:
 
     ## write function for exporting vcf files
     def __write__(self):
-        vcf_writer = vcf.Writer(open(self.out_vcf, 'w'), self.vcf_reader)
+        if int(sys.version_info.major) >= 3:
+            vcf_writer = vcf.Writer(open(self.out_vcf, 'w'), self.vcf_reader)
+        elif int(sys.version_info.major) == 2 :
+            vcf_writer = vcf.Writer(open(self.out_vcf, 'wb'), self.vcf_reader)
 
         for record in self.sub_vcf:
             vcf_writer.write_record(record)
 
 ## the main process
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", help="input vcf file")
-    parser.add_argument("-f", help="sample id of the father")
-    parser.add_argument("-m", help="sample id of the mother")
-    parser.add_argument("-a", help="sample id of the affected child")
-    parser.add_argument("-u", help="sample id of the unaffected child")
-    parser.add_argument("-aac", type=int  , default=0, help="remove varaints that alternative allele coverage is smaller than [INT], Default: 0")
-    parser.add_argument("-chi", type=float, default=10.8, help="remove varaints that chi2 square score is greater than [float], Default: 10.8")
-    parser.add_argument("-pc",  type=int  , default=0, help="remove varaints that the coverage in either parent is smaller than [INT], Default: 0")
-    parser.add_argument("-o",   help="output vcf file")
+    parser = argparse.ArgumentParser(description='denovo-multi-filter.py - a script for filtering Scalpel multi-sample vcf')
+    parser.add_argument("-i", help="input vcf file [REQUIRED]",required=True)
+    parser.add_argument("-f", help="sample id of the father [REQUIRED]",required=True)
+    parser.add_argument("-m", help="sample id of the mother [REQUIRED]",required=True)
+    parser.add_argument("-a", help="sample id of the affected child [REQUIRED]",required=True)
+    parser.add_argument("-u", help="sample id of the unaffected child [REQUIRED]",required=True)
+    parser.add_argument("-aac", type=int  , default=0, help="keep varaints if MINCOV (alternative allele coverage) is greater than [INT], Default: 0")
+    parser.add_argument("-chi", type=float, default=100, help="keep varaints if CHI2 Square score is smaller than [float], Default: 100")
+    parser.add_argument("-pc",  type=int  , default=0, help="keep varaints if the coverage in either parent is greater than [INT], Default: 0")
+    parser.add_argument("-o",   help="output vcf file [REQUIRED]",required=True)
 
     ## check if there is any argument
     if len(sys.argv) <= 1:
         parser.print_usage()
+        print ("[help] please use [-h] for details")
         sys.exit(1)
     else:
         args = parser.parse_args()
 
     ## process the file if the input files exist
-    if (args.i!=None) & (args.f!=None) & (args.m!=None) & (args.a!=None) & (args.u!=None) & (args.aac!=None) & (args.chi!=None) & (args.pc!=None) & (args.o!=None):
+    if (args.i!=None) & (args.f!=None) & (args.m!=None) & (args.a!=None) & (args.u!=None) & (args.o!=None):
         foo = filter_vcf(args.i, args.f, args.m, args.a, args.u, int(args.aac), float(args.chi), int(args.pc), args.o )
         foo.__call__()
         foo.__write__()
