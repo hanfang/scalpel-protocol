@@ -7,7 +7,7 @@ binwidth=(max-min)/n	#interval width
 #function used to map a value to the intervals
 #hist(x,width)=width*floor(x/width)+width/2.0
 
-set terminal pdf transparent enhanced font 'Helvetica,6'
+set terminal pdf transparent enhanced font 'Helvetica,9'
 set output outfile
 #set output 'indel_size_dist.pdf'
 set xrange [min:max]

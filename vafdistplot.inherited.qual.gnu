@@ -9,7 +9,7 @@ binwidth=(max-min)/n	#interval width
 
 #set terminal postscript size 8.00,10.00 enhanced color font 'Helvetica,10' 
 #set terminal postscript enhanced color eps font 'Helvetica,15' 
-set terminal pdf transparent enhanced color font 'Helvetica,6' 
+set terminal pdf transparent enhanced color font 'Helvetica,9' 
 set output outfile
 
 #set terminal png
@@ -53,7 +53,7 @@ show key
 
 #set title tool."VAF distribution"
 
-plot infileAll u (bin(100*($2/($1+$2)),binwidth)):(1.0) smooth frequency with boxes fs transparent solid title "All inherited indels" lc rgb 'red', \
-infileHq u (bin(100*($2/($1+$2)),binwidth)):(1.0) smooth frequency with boxes fs transparent solid title "High-quality inherited indels" lc rgb 'green'
+plot infileAll u (bin(100*($2/($1+$2)),binwidth)):(1.0) smooth frequency with boxes fs transparent solid title "Low-quality" lc rgb 'red', \
+infileHq u (bin(100*($2/($1+$2)),binwidth)):(1.0) smooth frequency with boxes fs transparent solid title "High-quality" lc rgb 'green'
 
 #unset multiplot

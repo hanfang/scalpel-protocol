@@ -4,9 +4,9 @@ set -e
 ##----------------------------------------------------------
 ## Scalpel resource bundle for variant calling and analysis
 ##----------------------------------------------------------
-## version: v0.5.2
+## version: v0.5.3
 ## Authors: Han Fang, Giuseppe Narzisi, Michael C. Schatz
-## Date: Aug 18, 2015
+## Date: March 4, 2016
 ##----------------------------------------------------------
 
 ##--------------------------------
@@ -40,17 +40,17 @@ bwa mem -t 10 -R '@RG\tID:NA12881\tSM:NA12881' hg19.fa ERR324432_1.fastq.gz ERR3
 bwa mem -t 10 -R '@RG\tID:NA12882\tSM:NA12882' hg19.fa ERR194151_1.fastq.gz ERR194151_2.fastq.gz | samtools view -h -S -b > NA12882.bam
 
 ## 5| Sort the bam files by chromosome coordinates with samtools:
-samtools sort -m 4G NA12877.bam NA12877.sort
-samtools sort -m 4G NA12878.bam NA12878.sort
-samtools sort -m 4G NA12881.bam NA12881.sort
-samtools sort -m 4G NA12882.bam NA12882.sort
+samtools sort -m 4G -o NA12877.sort.bam NA12877.bam
+samtools sort -m 4G -o NA12878.sort.bam NA12878.bam
+samtools sort -m 4G -o NA12881.sort.bam NA12881.bam
+samtools sort -m 4G -o NA12882.sort.bam NA12882.bam
 rm -f NA12877.bam NA12878.bam NA12881.bam NA12882.bam 
 
 ## 6| Mark duplicated reads within the alignment with picard tools:
-java -jar -Xmx10g picard MarkDuplicates INPUT=NA12877.sort.bam OUTPUT=NA12877.sort.markdup.bam METRICS_FILE=NA12877.sort.metric
-java -jar -Xmx10g picard MarkDuplicates INPUT=NA12878.sort.bam OUTPUT=NA12878.sort.markdup.bam METRICS_FILE=NA12878.sort.metric
-java -jar -Xmx10g picard MarkDuplicates INPUT=NA12881.sort.bam OUTPUT=NA12881.sort.markdup.bam METRICS_FILE=NA12881.sort.metric
-java -jar -Xmx10g picard MarkDuplicates INPUT=NA12882.sort.bam OUTPUT=NA12882.sort.markdup.bam METRICS_FILE=NA12882.sort.metric
+java -jar -Xmx10g picard.jar MarkDuplicates INPUT=NA12877.sort.bam OUTPUT=NA12877.sort.markdup.bam METRICS_FILE=NA12877.sort.metric
+java -jar -Xmx10g picard.jar MarkDuplicates INPUT=NA12878.sort.bam OUTPUT=NA12878.sort.markdup.bam METRICS_FILE=NA12878.sort.metric
+java -jar -Xmx10g picard.jar MarkDuplicates INPUT=NA12881.sort.bam OUTPUT=NA12881.sort.markdup.bam METRICS_FILE=NA12881.sort.metric
+java -jar -Xmx10g picard.jar MarkDuplicates INPUT=NA12882.sort.bam OUTPUT=NA12882.sort.markdup.bam METRICS_FILE=NA12882.sort.metric
 rm -f NA12877.sort.bam NA12878.sort.bam NA12881.sort.bam NA12882.sort.bam
 
 ## 7| Perform a basic quality control of the alignment files with samtools:
@@ -63,7 +63,7 @@ samtools flagstat NA12882.sort.markdup.bam > NA12882.sort.markdup.bam.simplestat
 ## Perform indel variant calling and downstream filtering
 ##--------------------------------
 ## 8| Run Scalpel in the “de novo” mode to perform multi-sample calling for a family. In this example, we use NA12882 as the affected individual. The NA12881 is the unaffected individual accordingly:
-time scalpel-discovery --denovo --dad NA12877.sort.markdup.bam --mom NA12878.sort.markdup.bam --aff NA12882.sort.markdup.bam --sib NA12881.sort.markdup.bam --bed SeqCap_EZ_Exome_v3_primary.scalpel.bed --ref hg19.fa --numprocs 10 --two-pass
+scalpel-discovery --denovo --dad NA12877.sort.markdup.bam --mom NA12878.sort.markdup.bam --aff NA12882.sort.markdup.bam --sib NA12881.sort.markdup.bam --bed SeqCap_EZ_Exome_v3_primary.scalpel.bed --ref hg19.fa --numprocs 10 --two-pass
 
 ## 9| Export the inherited and denovo mutations from the Scalpel database (in target only):
 scalpel-export --denovo --db outdir/main/inherited.db  --bed SeqCap_EZ_Exome_v3_primary.scalpel.bed --ref hg19.fa --intarget --min-alt-count-affected 10 --max-chi2-score 10.8  > inherited.onepass.vcf
@@ -108,7 +108,7 @@ for i in *.vcf.* ; do echo $i; grep -v "#" $i | wc -l ;done > indel.count.txt
 
 ## 19| Split the multisample vcf to an individual file for NA12882
 for file in *.hq; do bgzip -c $file > $file.gz ; tabix -p vcf $file.gz; done
-for file in *.hq.gz; do bcftools view -c1 -Oz -s NA12882 -o ${file/.gz*/.$sample.vcf.gz} ${file}; gunzip ${file/.gz*/.$sample.vcf.gz}; done
+for file in *.hq.gz; do bcftools view -c1 -Ov -s NA12882 -o ${file/.gz*/.NA12882.vcf} ${file}; done
 
 ## 20| Filter the single vcf files based on Chi-Square score and allele coverage
 python single-vcf-filter.py -i inherited.onepass.vcf.ms.out.hq.NA12882.vcf -mc 10 -chi 10.8 -o inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf
@@ -118,13 +118,12 @@ python single-vcf-filter.py -i denovo.twopass.vcf.ms.out.hq.NA12882.vcf -mc 10 -
 ## Annotation and visualization of the indel calls 
 ##--------------------------------
 ## 21| Prepare and create the input format required by ANNOVAR: 
-annovar=../one_folder/annovar/
-$annovar/convert2annovar.pl -format vcf4 inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf > inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput
-$annovar/convert2annovar.pl -format vcf4 denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf    > denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf.avinput
+annovar/convert2annovar.pl -format vcf4 inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf > inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput
+annovar/convert2annovar.pl -format vcf4 denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf    > denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf.avinput
 
 ## 22| Annotate and intersect indels with gene regions using ANNOVAR
-$annovar/annotate_variation.pl -buildver hg19 inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb
-$annovar/annotate_variation.pl -buildver hg19 denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb
+annovar/annotate_variation.pl -buildver hg19 inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb
+annovar/annotate_variation.pl -buildver hg19 denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb
 
 ## 23| Summarize coding region indels by size in R.
 cat inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput.exonic_variant_function | egrep -v 'unknown|stopgain' | cut -f 2,7,8 | cut -d " " -f 2 | awk '{if($2=="-") print $1"\t"length($3);else if ($3=="-") print $1"\t"length($2)}' > type_and_size.txt
@@ -134,17 +133,19 @@ Rscript coding_indel_size.R
 # > colnames(indel)= c("type","size")
 # > indel_30=indel[indel[,2]<=30,]
 # > indel.table <- table(indel_30$type,factor(indel_30$size,lev=1:30)  )
-# > pdf('indelsize_by_type.pdf', width=12, height=8)
-# > barplot(indel.table, main="indel distribution within coding sequence (CDS)", xlab="", col=c("green","red"), legend = rownames(indel.table))
-# > dev.off()
+# > pdf('indelsize_by_type.pdf', width=16, height=7)
+# > mar.default <- c(5,4,4,2) + 0.1
+# > par(mar = mar.default + c(0, 4, 0, 0))
+# > barplot(indel.table, main="indel distribution within coding sequence (CDS)", xlab="indel size", ylab="number of indels", col=c("green","red"), cex.axis=2, cex.names=2 , cex.lab = 2 , cex.main=2, cex.sub=2 )
+# > legend('topright',rownames(indel.table), fil=c('green', 'red'),  bty='n', cex=2)
 
 ## 24| Filter the indels based on population allele frequencies:
-$annovar/annotate_variation.pl -filter -out inherited.onepass.vcf.ms.out.hq.NA12882.filter -dbtype popfreq_max_20150413 -build hg19 inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb/
-$annovar/annotate_variation.pl -filter -out denovo.twopass.vcf.ms.out.hq.NA12882.filter -dbtype popfreq_max_20150413 -build hg19 denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb/
+annovar/annotate_variation.pl -filter -out inherited.onepass.vcf.ms.out.hq.NA12882.filter -dbtype popfreq_max_20150413 -build hg19 inherited.onepass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb/
+annovar/annotate_variation.pl -filter -out denovo.twopass.vcf.ms.out.hq.NA12882.filter -dbtype popfreq_max_20150413 -build hg19 denovo.twopass.vcf.ms.out.hq.NA12882.filter.vcf.avinput $annovar/humandb/
 
 ## 25| Annotate novel indels that were not reported by population database before (1000G, ESP6500, ExAC, CG46)
-$annovar/annotate_variation.pl -buildver hg19 inherited.onepass.vcf.ms.out.hq.NA12882.filter.hg19_popfreq_max_20150413_filtered $annovar/humandb
-$annovar/annotate_variation.pl -buildver hg19 denovo.twopass.vcf.ms.out.hq.NA12882.filter.hg19_popfreq_max_20150413_filtered $annovar/humandb
+annovar/annotate_variation.pl -buildver hg19 inherited.onepass.vcf.ms.out.hq.NA12882.filter.hg19_popfreq_max_20150413_filtered $annovar/humandb
+annovar/annotate_variation.pl -buildver hg19 denovo.twopass.vcf.ms.out.hq.NA12882.filter.hg19_popfreq_max_20150413_filtered $annovar/humandb
 
 ## 26| Retrieve novel frame-shift mutations, which are potentially loss-of-function
 awk '{if($2=="frameshift") print}' inherited.onepass.vcf.ms.out.hq.NA12882.filter.hg19_popfreq_max_20150413_filtered.exonic_variant_function > inherited.onepass.vcf.ms.out.hq.NA12882.filter.hg19_popfreq_max_20150413_filtered.exonic_variant_function.fs.txt

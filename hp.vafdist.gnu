@@ -9,7 +9,7 @@ binwidth=(max-min)/n	#interval width
 
 #set terminal postscript size 8.00,10.00 enhanced color font 'Helvetica,10' 
 #set terminal postscript enhanced color eps font 'Helvetica,15' 
-set terminal pdf transparent enhanced color font 'Helvetica,10' 
+set terminal pdf transparent enhanced color font 'Helvetica,9' 
 set output outfile
 
 #set terminal png
