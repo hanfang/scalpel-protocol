@@ -1,9 +1,10 @@
+###----------------------------------------------------------
 # README 
-##### Scalpel resource bundle for variant calling and analysis
-##### version: v0.5.3
-##### Authors: Han Fang, Giuseppe Narzisi, Michael C. Schatz
-##### Contact: hanfang.cshl@gmail.com gnarzisi@nygenome.org 
-##### Date: March 4, 2016
+#### Scalpel resource bundle for variant calling and analysis
+#### version: v0.5.3
+#### Authors: Han Fang, Giuseppe Narzisi, Michael C. Schatz
+#### Date: June 2, 2016
+###----------------------------------------------------------
 
 #### Introduction:
 
@@ -23,6 +24,6 @@ Currently we host some relevant scripts and files for running Scalpel and analyz
 
 
 #### If you use Scalpel, please cite:
-- Fang H, Grabowska EA, Arora K, Vacic V, Zody M, Iossifov I, O’Rawe JA, Y Wu, Jimenez-Barron LT, Rosenbaum J, Ronemus M, Lee Y, Wang Z, Dikoglu E, Jobanputra V, Lyon GJ, Wigler M, Schatz MC, Narzisi G*, "De novo and somatic indel variant analysis of whole genome and exome capture sequencing experiments with Scalpel". Preprint in bioRxiv (2016) doi: dx.doi.org/10.1101/028050
+- Fang H, Grabowska EA, Arora K, Vacic V, Zody M, Iossifov I, O’Rawe JA, Y Wu, Jimenez-Barron LT, Rosenbaum J, Ronemus M, Lee Y, Wang Z, Dikoglu E, Jobanputra V, Lyon GJ, Wigler M, Schatz MC, Narzisi G*, "Indel variant analysis of short-read sequencing data with Scalpel". Preprint in bioRxiv (2016) doi: dx.doi.org/10.1101/028050
 - Fang H, Wu Y, Narzisi G, O’Rawe JA, Jimenez Barron LT, Rosenbaum J, Ronemus M, Iossifov I, Schatz MC*, Lyon GJ* (2014). " Reducing INDEL calling errors in whole-genome and exome sequencing data". Genome Medicine (2014) doi:10.1186/s13073-014-0089-z 
 - Narzisi G, O’Rawe JA, Iossifov I, Fang H, Lee Y, Wang Z, Wu Y, Lyon GJ, Wigler M, Schatz MC. "Accurate detection of de novo and transmitted INDELs within exome-capture data using micro-assembly". Nature Methods (2014) doi:10.1038/nmeth.3069.
