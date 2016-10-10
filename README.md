@@ -16,14 +16,14 @@ Currently we host some relevant scripts and files for running Scalpel and analyz
 - Scalpel is also deployed on FireCloud: https://software.broadinstitute.org/firecloud/
 
 - This tar ball contains:
-  - run_protocol_0.53.sh: a master shell script documenting the main step in the protocol manuscript
-  - msdetector: a micro-satellite detector for marking variants within STR regions in a given vcf file
-  - SeqCap_EZ_Exome_v3_primary.scalpel.bed: a bed file contains exonic regions derived from the bed file of SeqCap EZ Human Exome Library v3.0 (http://www.nimblegen.com/downloads/annotation/ez_exome_v3/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip)
-  - clinvar_main.bed: a bed file of the variants in the ClinVar main database June 2015 
-  - *.gnu: several gnuplot scripts for plotting
-  - denovo-multi-filter.py: a python script for filtering Scalpel multi sample vcf (Python 2-3 compatible)
-  - single-vcf-filter.py: a python script for filtering Scalpel single sample vcf (Python 2-3 compatible)
-  - coding_indel_size.R: a R scipt for plotting coding region indel distribution
+  - `run_protocol_0.53.sh`: a master shell script documenting the main step in the protocol manuscript
+  - `msdetector`: a micro-satellite detector for marking variants within STR regions in a given vcf file
+  - `SeqCap_EZ_Exome_v3_primary.scalpel.bed`: a bed file contains exonic regions derived from the bed file of SeqCap EZ Human Exome Library v3.0 (http://www.nimblegen.com/downloads/annotation/ez_exome_v3/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip)
+  - `clinvar_main.bed`: a bed file of the variants in the ClinVar main database June 2015 
+  - `*.gnu`: several gnuplot scripts for plotting
+  - `denovo-multi-filter.py`: a python script for filtering Scalpel multi sample vcf (Python 2-3 compatible)
+  - `single-vcf-filter.py`: a python script for filtering Scalpel single sample vcf (Python 2-3 compatible)
+  - `coding_indel_size.R`: a R scipt for plotting coding region indel distribution
 
 
 #### If you use Scalpel, please cite:
