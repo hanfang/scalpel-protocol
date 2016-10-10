@@ -1,4 +1,3 @@
-###----------------------------------------------------------
 # README 
 #### Scalpel resource bundle for variant calling and analysis
 #### version: v0.5.3
