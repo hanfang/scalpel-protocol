@@ -1,8 +1,8 @@
 # README 
 #### Scalpel resource bundle for variant calling and analysis
 #### version: v0.5.3
-#### Authors: Han Fang, Giuseppe Narzisi, Michael C. Schatz
-#### Date: June 2, 2016
+#### Authors: Han Fang, Michael C. Schatz, Giuseppe Narzisi
+#### Date: October 10, 2016
 ###----------------------------------------------------------
 
 #### Introduction:
