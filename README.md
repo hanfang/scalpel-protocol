@@ -12,7 +12,7 @@ Currently we host some relevant scripts and files for running Scalpel and analyz
 
 #### Resources:
 - Docker image: https://hub.docker.com/r/hanfang/scalpel/
-  - ` docker pull hanfang/scalpel `
+  - ` docker pull hanfang/scalpel:0.5.3 `
 - Scalpel is also deployed on FireCloud: https://software.broadinstitute.org/firecloud/
 
 - This tar ball contains:
